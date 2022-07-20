@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
-  "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "devStart": "nodemon index.js",
@@ -18,8 +17,6 @@
     "multer": "^2.0.0-rc.3",
     "mysql": "^2.18.1",
     "nodemon": "^2.0.14",
-    "paypal-rest-sdk": "^1.8.1",
-    "rate-limiter-flexible": "^2.3.6",
     "uuid": "^8.3.2"
   }
 }
