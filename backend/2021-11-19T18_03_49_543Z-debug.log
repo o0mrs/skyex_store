@@ -1,0 +1,38 @@
+0 info it worked if it ends with ok
+1 verbose cli [ '/opt/alt/alt-nodejs10/root/usr/bin/node',
+1 verbose cli   '/opt/alt/alt-nodejs10/root/usr/bin/npm',
+1 verbose cli   'run-script',
+1 verbose cli   'devStart',
+1 verbose cli   '--' ]
+2 info using npm@6.14.12
+3 info using node@v10.24.1
+4 verbose run-script [ 'predevStart', 'devStart', 'postdevStart' ]
+5 info lifecycle astatine_api@1.0.0~predevStart: astatine_api@1.0.0
+6 info lifecycle astatine_api@1.0.0~devStart: astatine_api@1.0.0
+7 warn lifecycle The node binary used for scripts is /home/omrseu/nodevenv/api/10/bin/node but npm is using /opt/alt/alt-nodejs10/root/usr/bin/node itself. Use the `--scripts-prepend-node-path` option to include the path for the node binary npm was executed with.
+8 verbose lifecycle astatine_api@1.0.0~devStart: unsafe-perm in lifecycle true
+9 verbose lifecycle astatine_api@1.0.0~devStart: PATH: /opt/alt/alt-nodejs10/root/usr/lib/node_modules/npm/node_modules.bundled/npm-lifecycle/node-gyp-bin:/home/omrseu/api/node_modules/.bin:/home/omrseu/nodevenv/api/10/bin:/opt/alt/alt-nodejs10/root/usr/bin:/home/omrseu/nodevenv/api/10/lib/bin/:/usr/local/jdk/bin:/usr/kerberos/sbin:/usr/kerberos/bin:/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin:/usr/X11R6/bin:/usr/local/bin:/usr/X11R6/bin:/root/bin:/opt/bin
+10 verbose lifecycle astatine_api@1.0.0~devStart: CWD: /home/omrseu/api
+11 silly lifecycle astatine_api@1.0.0~devStart: Args: [ '-c', 'nodemon index.js' ]
+12 info lifecycle astatine_api@1.0.0~devStart: Failed to exec devStart script
+13 verbose stack Error: astatine_api@1.0.0 devStart: `nodemon index.js`
+13 verbose stack spawn ENOENT
+13 verbose stack     at ChildProcess.<anonymous> (/opt/alt/alt-nodejs10/root/usr/lib/node_modules/npm/node_modules.bundled/npm-lifecycle/lib/spawn.js:48:18)
+13 verbose stack     at ChildProcess.emit (events.js:198:13)
+13 verbose stack     at maybeClose (internal/child_process.js:982:16)
+13 verbose stack     at Process.ChildProcess._handle.onexit (internal/child_process.js:259:5)
+14 verbose pkgid astatine_api@1.0.0
+15 verbose cwd /home/omrseu/api
+16 verbose Linux 3.10.0-962.3.2.lve1.5.38.el7.x86_64
+17 verbose argv "/opt/alt/alt-nodejs10/root/usr/bin/node" "/opt/alt/alt-nodejs10/root/usr/bin/npm" "run-script" "devStart" "--"
+18 verbose node v10.24.1
+19 verbose npm  v6.14.12
+20 error code ELIFECYCLE
+21 error syscall spawn
+22 error file sh
+23 error errno ENOENT
+24 error astatine_api@1.0.0 devStart: `nodemon index.js`
+24 error spawn ENOENT
+25 error Failed at the astatine_api@1.0.0 devStart script.
+25 error This is probably not a problem with npm. There is likely additional logging output above.
+26 verbose exit [ 1, true ]

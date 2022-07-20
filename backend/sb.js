@@ -1871,6 +1871,54 @@ app.post('/addshippingprofile',(req, res)=>{
         }
     })
 })
+app.post('/addmethod',(req, res)=>{
+    const userToken = req.body.userToken
+const usernamevefy = req.body.username
+
+const name = req.body.name
+var ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress 
+db.query('SELECT STORE_users.user, STORE_rank.* FROM STORE_users INNER JOIN STORE_rank ON STORE_users.rank=STORE_rank.name WHERE STORE_users.userToken = ? AND user = ?',[userToken,usernamevefy],(err,result) => {
+    if(err){
+        console.log(err)
+    }else{
+        if(result.length == 0){
+            //kick him 
+            res.send({status:0})
+        }else if(result.length == 1){
+            //check permissions
+            var s = result[0].perm
+            if(s.indexOf(',4,') > -1){
+             //all good
+            //do your thing
+            if(name.length > 0){
+                db.query("INSERT INTO `STORE_shipping` ( `name`, `ptype`, worldwide, worldwide_price, array, type, price, visible, ptoc) VALUES (?,5,NULL,NULL,NULL,5,NULL,NULL,NULL)",[name],(err4,result4) => {
+                    if(err4){
+                        console.log(err4)
+                    }else{
+                        res.send({status:1})
+                    }
+                })
+            }else{
+                res.send({status:501})
+            }
+           
+        db.query('INSERT INTO `STORE_logs` (`made_by`, `wchange`, `date`,ip) VALUES (?,"Added a method profile",?,?)',[result[0].user,cur_time,ip],(err96,result96) => {
+            if(err96){
+                console.log(err96)
+            }
+        })
+            }else{
+                res.send({status:22})
+            }
+
+
+        }else{
+            res.send({status:2})
+            //send this request to support
+        }
+    }
+})
+})
 // visible
 app.post('/getshippingprofileforadmins',(req, res)=>{
         const userToken = req.body.userToken
@@ -1909,6 +1957,44 @@ app.post('/getshippingprofileforadmins',(req, res)=>{
             }
         }
     })
+})
+app.post('/getadminshippingmethods',(req, res)=>{
+    const userToken = req.body.userToken
+const usernamevefy = req.body.username
+
+    var ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress 
+db.query('SELECT STORE_users.user, STORE_rank.* FROM STORE_users INNER JOIN STORE_rank ON STORE_users.rank=STORE_rank.name WHERE STORE_users.userToken = ? AND user = ?',[userToken,usernamevefy],(err,result) => {
+    if(err){
+        console.log(err)
+    }else{
+        if(result.length == 0){
+            //kick him 
+            res.send({status:0})
+        }else if(result.length == 1){
+            //check permissions
+            var s = result[0].perm
+            if(s.indexOf(',4,') > -1){
+             //all good
+            //do your thing
+            
+        db.query('SELECT * FROM `STORE_shipping` WHERE ptype = 5 AND type = 5',(err96,result96) => {
+            if(err96){
+                console.log(err96)
+            }else{
+                res.send(result96)
+            }
+        })
+            }else{
+                res.send({status:22})
+            }
+
+
+        }else{
+            res.send({status:2})
+            //send this request to support
+        }
+    }
+})
 })
 app.post('/editprofilen',(req, res)=>{
         const userToken = req.body.userToken
@@ -2423,9 +2509,9 @@ app.post('/shippingmethods',(req,res)=>{
                                                             // console.log(ii)
                                                             var element = {}
                                                         if(gff.type == 1 && gff.priceble == 1){
-                                                            db.query('SELECT * FROM STORE_shipping WHERE id = ? AND worldwide = 1 OR ptoc = ? AND name = ? AND ptype = 1 AND type = 2 OR ptoc = ? AND name = ? AND ptype = 1 AND type = 1 AND array = ? ORDER BY `STORE_shipping`.`id` DESC',[gff.to,gff.to,country,gff.to,country,state],(err9,result9)=>{
+                                                            db.query('SELECT * FROM STORE_shipping WHERE id = ? AND worldwide = 1 OR ptoc = ? AND name = ? AND ptype = 1 AND type = 1 OR ptoc = ? AND name = ? AND ptype = 1 AND type = 2 AND array = ? ORDER BY `STORE_shipping`.`id` DESC',[gff.to,gff.to,country,gff.to,country,state],(err9,result9)=>{
 
-                                                                // console.log(result9[0])
+                                                                console.log(result9)
                                                                 if(err9){
                                                                     // console.log(err9)
                                                                     res.send({status:501})
@@ -2433,7 +2519,7 @@ app.post('/shippingmethods',(req,res)=>{
                                                             // console.log(result9)
                                                             e.push({id:gff.id,name:gff.name,icon:gff.icon,priceble:gff.priceble,type:gff.type,price:gff.price,to:gff.to,en:1})
                                                             if(e.length == t.length){
-                                                                // console.log(e)
+
                                                                 send()
                                                                 // console.log('e')
                                                             }
@@ -2669,5 +2755,49 @@ if(err33){
            }
         })
         })
+        app.post('/addzone',(req, res)=>{
+            const userToken = req.body.userToken
+        const usernamevefy = req.body.username
+        const zto = req.body.zto
+        const zarr = req.body.zarr
+            var ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress 
+        db.query('SELECT STORE_users.user, STORE_rank.* FROM STORE_users INNER JOIN STORE_rank ON STORE_users.rank=STORE_rank.name WHERE STORE_users.userToken = ? AND user = ?',[userToken,usernamevefy],(err,result) => {
+            if(err){
+                console.log(err)
+            }else{
+                if(result.length == 0){
+                    //kick him 
+                    res.send({status:0})
+                }else if(result.length == 1){
+                    //check permissions
+                    var s = result[0].perm
+                    if(s.indexOf(',4,') > -1){
+                     //all good
+                    //do your thing
+                    db.query('UPDATE STORE_shipping SET shippingmethods = ? WHERE id = ?',[zarr,zto],(err33,result33) => {
+                        if(err33){
+                            console.log(err33)
+                            res.send({status:501})
+                        }else{
+                            res.send({status:1})
+                        }
+                                            })
+                db.query('INSERT INTO `STORE_logs` (`made_by`, `wchange`, `date`,ip) VALUES ("UNKNOWN","Added a zone",?,?)',[cur_time,ip],(err96,result96) => {
+                    if(err96){
+                        console.log(err96)
+                    }
+                })
+                    }else{
+                        res.send({status:22})
+                    }
+    
+    
+                }else{
+                    res.send({status:2})
+                    //send this request to support
+                }
+            }
+        })
+    })
 var httpsServer = https.createServer(credentials, app);
 httpsServer.listen(PORT, () => console.log(`Server is running on PORT ${PORT}`));
