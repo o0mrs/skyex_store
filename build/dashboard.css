@@ -1,0 +1,252 @@
+body{
+    background: #0e0f13;
+}
+.bb{
+    bottom: 0;
+    left:2;
+    position:fixed;
+}
+.tr{
+    top: 0;
+    right:0;
+    position:fixed;
+}
+.r{
+    right:0;
+    position:fixed;
+}
+.tl{
+    top: 0;
+    left:0;
+    position:fixed;
+}
+
+.b{
+    -webkit-tap-highlight-color: transparent;
+}
+/* arrow animation */
+.arrow-down{
+    animation: arrow-down 1s infinite;
+}
+@keyframes arrow-down{
+    0%{
+        transform: rotate(0deg);
+    }
+    100%{
+        transform: rotate(180deg);
+    }
+}
+/* arrow animation */
+.arrow-up{
+    animation: arrow-up 1s infinite;
+}
+@keyframes arrow-up{
+    0%{
+        transform: rotate(0deg);
+    }
+    100%{
+        transform: rotate(180deg);
+    }
+}
+/* arrow animation */
+.arrow-left{
+    animation: arrow-left 1s infinite;
+}
+@keyframes arrow-left{
+    0%{
+        transform: rotate(0deg);
+    }
+    100%{
+        transform: rotate(180deg);
+    }
+}
+/* arrow animation */
+.arrow-right{
+    animation: arrow-right 1s infinite;
+}
+@keyframes arrow-right{
+    0%{
+        transform: rotate(0deg);
+    }
+    100%{
+        transform: rotate(180deg);
+    }
+}
+.dot-pulse {
+    position: relative;
+    left: -9999px;
+    width: 10px;
+    height: 10px;
+    border-radius: 5px;
+    background-color: #141414;
+    color: #141414;
+    box-shadow: 9999px 0 0 -5px #141414;
+    animation: dotPulse 1.5s infinite linear;
+    animation-delay: .25s;
+  }
+  
+  .dot-pulse::before, .dot-pulse::after {
+    content: '';
+    display: inline-block;
+    position: absolute;
+    top: 0;
+    width: 10px;
+    height: 10px;
+    border-radius: 5px;
+    background-color: #9880ff;
+    color: #9880ff;
+  }
+  
+  .dot-pulse::before {
+    box-shadow: 9984px 0 0 -5px #141414;
+    animation: dotPulseBefore 1.5s infinite linear;
+    animation-delay: 0s;
+  }
+  
+  .dot-pulse::after {
+    box-shadow: 10014px 0 0 -5px #141414;
+    animation: dotPulseAfter 1.5s infinite linear;
+    animation-delay: .5s;
+  }
+  
+  @keyframes dotPulseBefore {
+    0% {
+      box-shadow: 9984px 0 0 -5px #525252;
+    }
+    30% {
+      box-shadow: 9984px 0 0 2px #525252;
+    }
+    60%,
+    100% {
+      box-shadow: 9984px 0 0 -5px #525252;
+    }
+  }
+  
+  @keyframes dotPulse {
+    0% {
+      box-shadow: 9999px 0 0 -5px #525252;
+    }
+    30% {
+      box-shadow: 9999px 0 0 2px #525252;
+    }
+    60%,
+    100% {
+      box-shadow: 9999px 0 0 -5px #525252;
+    }
+  }
+  
+  @keyframes dotPulseAfter {
+    0% {
+      box-shadow: 10014px 0 0 -5px #525252;
+    }
+    30% {
+      box-shadow: 10014px 0 0 2px #525252;
+    }
+    60%,
+    100% {
+      box-shadow: 10014px 0 0 -5px #525252;
+    }
+  }
+  #table {
+
+    text-align: left;
+}
+#table th:first-child {
+
+    position: -webkit-sticky;
+    left: 0px;
+    z-index: 11;
+}
+#table :where(th, td) {
+    white-space: nowrap;
+    padding: 1rem/* 16px */;
+    vertical-align: middle;
+}
+#table tr.active th, 
+    #table tr.active td, 
+    #table tr.active:nth-child(even) th, 
+    #table tr.active:nth-child(even) td {
+    --tw-bg-opacity: 1;
+    background-color: hsl(var(--b3, var(--b2)) / var(--tw-bg-opacity));
+}
+#table tr.active th, 
+    #table tr.active td, 
+    #table tr.active:nth-child(even) th, 
+    #table tr.active:nth-child(even) td {
+    --tw-bg-opacity: 1;
+    background-color: hsl(var(--b3, var(--b2)) / var(--tw-bg-opacity));
+}
+#table tr.active th, 
+    #table tr.active td, 
+    #table tr.active:nth-child(even) th, 
+    #table tr.active:nth-child(even) td {
+    --tw-bg-opacity: 1;
+    background-color: hsl(var(--b3, var(--b2)) / var(--tw-bg-opacity));
+}
+#table tr.active th, 
+    #table tr.active td, 
+    #table tr.active:nth-child(even) th, 
+    #table tr.active:nth-child(even) td {
+    --tw-bg-opacity: 1;
+    background-color: hsl(var(--b3, var(--b2)) / var(--tw-bg-opacity));
+}
+#table tr.hover:hover th, 
+    #table tr.hover:hover td, 
+    #table tr.hover:nth-child(even):hover th, 
+    #table tr.hover:nth-child(even):hover td {
+    --tw-bg-opacity: 1;
+    background-color: hsl(var(--b3, var(--b2)) / var(--tw-bg-opacity));
+}
+#table tr.hover:hover th, 
+    #table tr.hover:hover td, 
+    #table tr.hover:nth-child(even):hover th, 
+    #table tr.hover:nth-child(even):hover td {
+    --tw-bg-opacity: 1;
+    background-color: hsl(var(--b3, var(--b2)) / var(--tw-bg-opacity));
+}
+#table tr.hover:hover th, 
+    #table tr.hover:hover td, 
+    #table tr.hover:nth-child(even):hover th, 
+    #table tr.hover:nth-child(even):hover td {
+    --tw-bg-opacity: 1;
+    background-color: hsl(var(--b3, var(--b2)) / var(--tw-bg-opacity));
+}
+#table tr.hover:hover th, 
+    #table tr.hover:hover td, 
+    #table tr.hover:nth-child(even):hover th, 
+    #table tr.hover:nth-child(even):hover td {
+    --tw-bg-opacity: 1;
+    background-color: hsl(var(--b3, var(--b2)) / var(--tw-bg-opacity));
+}
+#table:where(:not(#table-zebra)) :where(thead, tbody, tfoot) :where(tr:not(:last-child) :where(th, td)) {
+    border-bottom-width: 1px;
+    --tw-border-opacity: 1;
+    border-color: hsl(var(--b2, var(--b1)) / var(--tw-border-opacity));
+}
+#table :where(thead, tfoot) :where(th, td) {
+    --tw-bg-opacity: 1;
+    background-color: hsl(var(--b2, var(--b1)) / var(--tw-bg-opacity));
+    font-size: 0.75rem/* 12px */;
+    line-height: 1rem/* 16px */;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+#table :where(:first-child) :where(:first-child) :where(th, td):first-child {
+    border-top-left-radius: 0.5rem/* 8px */;
+}
+#table :where(:first-child) :where(:first-child) :where(th, td):last-child {
+    border-top-right-radius: 0.5rem/* 8px */;
+}
+#table :where(:last-child) :where(:last-child) :where(th, td):first-child {
+    border-bottom-left-radius: 0.5rem/* 8px */;
+}
+#table :where(:last-child) :where(:last-child) :where(th, td):last-child {
+    border-bottom-right-radius: 0.5rem/* 8px */;
+}
+#table :where(tbody th, tbody td) {
+    --tw-bg-opacity: 1;
+    background-color: hsl(var(--b1) / var(--tw-bg-opacity));
+}
+#table {
+    display: table;
+}
