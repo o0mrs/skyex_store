@@ -6,6 +6,8 @@ const express = require('express');
 const { get } = require('http');
 const app = express();
 // var Ddos = require('ddos')
+const axios = require('axios');
+
 const PORT = process.env.PORT || 2000;
 const cors = require('cors');
 const mysql = require('mysql');
@@ -37,7 +39,7 @@ app.use(cors({
 
 const db = mysql.createPool({
     user: "omar",
-    host: "localhost",
+    host: "127.0.0.1",
     password: "*Onepeesosaaa2#",
     database: "omrseu_projects",
     charset: "utf8mb4",
@@ -224,26 +226,23 @@ app.post('/login',(req, res) => {
 
 //check userToken
 app.post('/verfy',(req, res) => {
-        const userToken = req.body.userToken
-    const usernamevefy = req.body.username
-    
+    const userToken = req.body.userToken
     const username = req.body.username
-    db.query('SELECT user, email, rank, name, id FROM STORE_users WHERE userToken = ? AND user = ?',[userToken,username],(err,result) => {
+    db.query('SELECT user, email, rank, av, name, id FROM STORE_users WHERE userToken = ? AND user = ?',[userToken,username],(err,result) => {
         if(err){
             console.log(err)
+            res.send({msg: 501})
         }else{
             if( result.length == 0){
                 res.send({msg: 0})
             }else if (result.length == 1){
-            res.send({msg: 1, username: result[0].user, email: result[0].email, rank: result[0].rank, name: result[0].name, id: result[0].id})
+            res.send({msg: 1, username: result[0].user, av:result[0].av, email: result[0].email, rank: result[0].rank, name: result[0].name, id: result[0].id})
             }else if ( result.length < 1){
                 res.send({msg: 2})     
             }
         }
     })
 })
-
-
 app.post('/overview',(req, res) => {
 
 
@@ -363,6 +362,22 @@ app.post('/getcatagorys',(req, res)=>{
     })
 })
 //edit catagory
+app.get('/getestmatedprice',async (req,res)=>{
+    const axios = require('axios');
+    res.send('response')
+    const response = await axios.post(
+        'https://api.printful.com/orders/estimate-costs',
+        '{\n"recipient": {\n"name": "John Doe",\n"address1": "19749 Dearborn St",\n"city": "Chatsworth",\n"state_code": "CA",\n"country_code": "US",\n"zip": "91311"\n},\n"items": [\n        {\n            "external_variant_id": "637140e314a808",\n                        "name": "Grand Canyon poster",\n            "retail_price": "25.95",\n            "quantity": 1\n        }\n    ]\n}',
+        {
+            headers: {
+                'Authorization': 'Bearer tCF6b5juU6t7axkB6F1QkBVCCCJjcUoKYALoRu8M',
+                'Content-Type': 'application/x-www-form-urlencoded'
+            }
+        }
+    );
+    console.log(response.data)
+
+})
 app.post('/handlecatagorysave',(req, res)=>{
         const userToken = req.body.userToken
     const usernamevefy = req.body.username
@@ -420,7 +435,7 @@ app.post('/handlecatagorysave',(req, res)=>{
         }
     })
 })
-//add catagory to the
+//add catagory to thefjinc
 app.post('/addcatagory',(req, res)=>{
         const userToken = req.body.userToken
     const usernamevefy = req.body.username
@@ -499,7 +514,7 @@ app.post('/adminaccount',(req, res)=>{
     const usernamevefy = req.body.username
     
         var ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress 
-    db.query('SELECT user FROM STORE_users WHERE userToken = ?',[userToken],(err,result) => {
+    db.query('SELECT user FROM STORE_users WHERE userToken = ? AND user = ?',[userToken,usernamevefy],(err,result) => {
         if(err){
             console.log(err)
         }else{
@@ -509,7 +524,7 @@ app.post('/adminaccount',(req, res)=>{
             }else if(result.length == 1){
                 //all good
                 //do your thing
-                db.query('SELECT user, email, rank, name FROM STORE_users WHERE userToken = ?',[userToken],(err3,result3) => {
+                db.query('SELECT user, email, rank, name,av FROM STORE_users WHERE userToken = ?',[userToken],(err3,result3) => {
                     if(err3){
                         console.log(err3)
                     }else{
@@ -760,25 +775,15 @@ function getRandomInt(max) {
   return Math.floor(Math.random() * max);
 }
 app.post('/upload', upload.single('file'), async function (req, res, next) {
-    console.log('request')
+    // console.log('request')
 const { 
   file,
-  body:{userToken,id}
+  body:{userToken,id,username}
 } = req;
 
-var ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress 
-const handleimage = async ()=>{
-    const filename = id + getRandomInt(93832) * getRandomInt(213) + getRandomInt(382745) + getRandomInt(123) * getRandomInt(4241) + getRandomInt(93832) + id + file.detectedFileExtension
-    await pipeline(file.stream, fs.createWriteStream(`${__dirname}/public/${filename}`))
-    console.log('Done')
-    // 1
-    // res.send({id: id,image:'https://' + req.headers.host + '/' + filename})
-    // 2
-    res.send({id: id,image:'https://' + req.socket.servername + '/' + filename})
     
-console.log()
-  }
-    db.query('SELECT user FROM STORE_users WHERE userToken = ?',[userToken],(err,result) => {
+        var ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress 
+    db.query('SELECT STORE_users.user, STORE_rank.* FROM STORE_users INNER JOIN STORE_rank ON STORE_users.rank=STORE_rank.name WHERE STORE_users.userToken = ? AND user = ?',[userToken,username],(err,result) => {
         if(err){
             console.log(err)
         }else{
@@ -786,31 +791,52 @@ console.log()
                 //kick him 
                 res.send({status:0})
             }else if(result.length == 1){
-                //all good
+                //check permissions
+                var s = result[0].perm
+                if(s.indexOf(',1,') > -1){
+                 //all good
                 //do your thing
-                console.log(file.detectedFileExtension)
-                if(file.detectedFileExtension == ".mp4"){
-                    handleimage()
-                    }else if(file.detectedFileExtension == ".png"){
+
+                const handleimage = async ()=>{
+                    const filename = id + getRandomInt(93832) * getRandomInt(213) + getRandomInt(382745) + getRandomInt(123) * getRandomInt(4241) + getRandomInt(93832) + id + file.detectedFileExtension
+                    await pipeline(file.stream, fs.createWriteStream(`${__dirname}/public/${filename}`))
+                    console.log('Done')
+                    // 1
+                    // res.send({id: id,image:'https://' + req.headers.host + '/' + filename})
+                    // 2
+                    res.send({id: id,image:'https://' + req.socket.servername + '/' + filename})
+                    
+                console.log()
+                  }
+                  console.log(file.detectedFileExtension)
+                  if(file.detectedFileExtension == ".mp4"){
                       handleimage()
-                    }else if(file.detectedFileExtension == ".jpg"){
-                      handleimage()
-                    }else if(file.detectedFileExtension == ".jpg"){
+                      }else if(file.detectedFileExtension == ".png"){
+                        handleimage()
+                      }else if(file.detectedFileExtension == ".jpg"){
+                        handleimage()
+                      }else if(file.detectedFileExtension == ".jpg"){
+                            handleimage()
+                      }else if(file.detectedFileExtension == ".svg"){
+                        handleimage()
+                      }else if(file.detectedFileExtension == ".mov"){
                           handleimage()
-                    }else if(file.detectedFileExtension == ".svg"){
-                      handleimage()
-                    }else if(file.detectedFileExtension == ".mov"){
-                        handleimage()
-                    }else if(file.detectedFileExtension == ".webp"){
-                        handleimage()
-                    }else{
-                        console.log(file.detectedFileExtension)
-                    }
-            db.query('INSERT INTO `STORE_logs` (`made_by`, `wchange`, `date`,ip) VALUES (?,"Upload a File",?,?)',[result[0].user,cur_time,ip],(err96,result96) => {
-                if(err96){
-                    console.log(err96)
+                      }else if(file.detectedFileExtension == ".webp"){
+                          handleimage()
+                      }else{
+                          console.log(file.detectedFileExtension)
+                      }
+              db.query('INSERT INTO `STORE_logs` (`made_by`, `wchange`, `date`,ip) VALUES (?,"Upload a File",?,?)',[result[0].user,cur_time,ip],(err96,result96) => {
+                  if(err96){
+                      console.log(err96)
+                  }
+              })
+
+                
+                }else{
+                    res.send({status:22})
                 }
-            })
+
 
             }else{
                 res.send({status:2})
@@ -818,15 +844,83 @@ console.log()
             }
         }
     })
-
 })
+// change store logo
+//  settings permtions
+app.post('/change_store_logo', upload.single('file'), async function (req, res, next) {
+    // console.log('request')
+const { 
+  file,
+  body:{userToken,id,username}
+} = req;
 
-
-
-app.post('/addproduct',(req, res)=>{
-        const userToken = req.body.userToken
-    const usernamevefy = req.body.username
     
+        var ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress 
+    db.query('SELECT STORE_users.user, STORE_rank.* FROM STORE_users INNER JOIN STORE_rank ON STORE_users.rank=STORE_rank.name WHERE STORE_users.userToken = ? AND user = ?',[userToken,username],(err,result) => {
+        if(err){
+            console.log(err)
+        }else{
+            if(result.length == 0){
+                //kick him 
+                res.send({status:0})
+            }else if(result.length == 1){
+                //check permissions
+                var s = result[0].perm
+                if(s.indexOf(',1,') > -1){
+                 //all good
+                //do your thing
+
+                const handleimage = async ()=>{
+                    const filename = 'logo'
+                    await pipeline(file.stream, fs.createWriteStream(`${__dirname}/public/${filename}`))
+                    console.log('Done')
+                    // 1
+                    // res.send({id: id,image:'https://' + req.headers.host + '/' + filename})
+                    // 2
+                    res.send({id: id,image:'https://' + req.socket.servername + '/' + filename})
+                    
+                console.log()
+                  }
+                  console.log(file.detectedFileExtension)
+                  if(file.detectedFileExtension == ".mp4"){
+                      handleimage()
+                      }else if(file.detectedFileExtension == ".png"){
+                        handleimage()
+                      }else if(file.detectedFileExtension == ".jpg"){
+                        handleimage()
+                      }else if(file.detectedFileExtension == ".jpg"){
+                            handleimage()
+                      }else if(file.detectedFileExtension == ".svg"){
+                        handleimage()
+                      }else if(file.detectedFileExtension == ".mov"){
+                          handleimage()
+                      }else if(file.detectedFileExtension == ".webp"){
+                          handleimage()
+                      }else{
+                          console.log(file.detectedFileExtension)
+                      }
+              db.query('INSERT INTO `STORE_logs` (`made_by`, `wchange`, `date`,ip) VALUES (?,"Upload a File",?,?)',[result[0].user,cur_time,ip],(err96,result96) => {
+                  if(err96){
+                      console.log(err96)
+                  }
+              })
+
+                
+                }else{
+                    res.send({status:22})
+                }
+
+
+            }else{
+                res.send({status:2})
+                //send this request to support
+            }
+        }
+    })
+})
+app.post('/addproduct',(req, res)=>{
+    const userToken = req.body.userToken
+    const usernamevefy = req.body.username
     const name = req.body.name
     const price = req.body.price
     const details = req.body.details
@@ -1891,7 +1985,7 @@ db.query('SELECT STORE_users.user, STORE_rank.* FROM STORE_users INNER JOIN STOR
              //all good
             //do your thing
             if(name.length > 0){
-                db.query("INSERT INTO `STORE_shipping` ( `name`, `ptype`, worldwide, worldwide_price, array, type, price, visible, ptoc) VALUES (?,5,NULL,NULL,NULL,5,NULL,NULL,NULL)",[name],(err4,result4) => {
+                db.query("INSERT INTO `STORE_shipping` ( `name`, `ptype`, worldwide, worldwide_price, array, type, price, visible, ptoc, shippingmethods) VALUES (?,5,NULL,NULL,NULL,5,NULL,NULL,NULL,'[]')",[name],(err4,result4) => {
                     if(err4){
                         console.log(err4)
                     }else{
@@ -2044,6 +2138,370 @@ console.log('re')
         }
     })
 })
+app.post('/gettotal',(req, res)=>{
+    const gcart = req.body.cart
+    const sh = req.body.sh
+    const country = req.body.country
+        
+    let statee = '%'+req.body.state+'%'
+    console.log('req')
+    // console.log(gcart)
+    
+    var products = []
+    
+    
+    if(gcart){
+    //    console.log(gcart)
+       if(gcart.length > 0){
+        gcart.map((value,i)=>{
+            var product = []
+            let counter = 0
+            const ship = (gf)=>{
+                console.log('ship')
+                var en = []
+                sh.map((gff,ii)=>{
+                    db.query('SELECT shippingmethods FROM STORE_shipping WHERE id = ?',[gff.id],(err9,result9)=>{
+                        if(err9){
+console.log(err9)
+                        }else{
+                            if(result9 && sh){
+                                if(result9[0].shippingmethods){
+                                    console.log('f')
+                                    let myg = JSON.parse(result9[0].shippingmethods)
+                                    var rs = myg.filter(obj=>obj.id == gff.idn);
+console.log(rs[0])
+const v = (gf,gf2)=>{
+    res.send({ship:JSON.stringify(gf),products:JSON.stringify(gf2)})
+}
+if(rs[0]){
+    let d = rs[0]
+    if(d.type === 1 && d.priceble === 0){
+        // pick up
+        en.push({id:gff.id,idn:gff.idn,price:0,est:'FOR THE NEVER EVER'})
+        if(en.length == sh.length){
+            v(en,gf)
+                    }
+    }else if(d.type === 1 && d.priceble === 1){
+        // profile
+        db.query('SELECT * FROM STORE_shipping WHERE id = ? AND worldwide = 1 OR ptoc = ? AND name = ? AND ptype = 1 AND type = 1 OR ptoc = ? AND name = ? AND ptype = 1 AND type = 2 AND array LIKE ? ORDER BY `STORE_shipping`.`id` DESC',[d.to,d.to,country,d.to,country,statee],(err99,result99)=>{
+            console.log('result9')
+            console.log(result9)
+            if(err99){
+                console.log(err99)
+                res.send({status:501})
+            }else if(result9.length > 0){
+                console.log('result99')
+        console.log(result99)
+        let shit = result99[0]
+        if(shit.type == 2 && shit.ptype == 1){
+// state
+console.log('state')
+en.push({id:gff.id,idn:gff.idn,price:JSON.parse(shit.array).filter(obj=>obj.name === req.body.state)[0].price,est:'FOR THE NEVER EVER',name:d.name,icon:d.icon})
+if(en.length == sh.length){
+
+    v(en,gf)
+            }
+        }else if(shit.type == 1 && shit.ptype == 1){
+            // without states
+            console.log('wstates')
+            en.push({id:gff.id,idn:gff.idn,price:shit.worldwide_price,est:'FOR THE NEVER EVER',name:d.name,icon:d.icon})
+            if(en.length == sh.length){
+                v(en,gf)
+                        }
+        }else if(shit.type == 0 && shit.worldwide == '1'){
+            // worldwide
+            console.log('worldwide')
+            en.push({id:gff.id,idn:gff.idn,price:shit.worldwide_price,est:'FOR THE NEVER EVER',name:d.name,icon:d.icon})
+            if(en.length == sh.length){
+                v(en,gf)
+                        }
+        }
+
+
+            }else{
+                error()
+            }
+        })
+    }else if(d.type === 9 && priceble === 1){
+// DHL
+    }
+} 
+                                }
+                            }
+                        }
+                    })
+                })
+            }
+            const shipping = (gf)=>{
+                console.log('shipping')
+                var sum = null;
+                let counter = 0
+                gf.map((g,i)=>{
+                    if(g.status == 200){
+                      if(i == gf.length - 1){
+                        sum += g.price
+                        console.log(sum)
+                        console.log(sum)
+                        ship(sum)
+                      }else{
+                        sum += g.price
+                        console.log(sum)
+        
+                        console.log(sum)
+                      }
+                    }else{
+                      // we have problem with i
+                      if(i == gf.length - 1){
+            
+                        ship(sum)
+                      }
+                      // set
+                    }
+                  })
+            }
+            const send =  ()=>{
+                console.log('send')
+                console.log(counter)
+                if(counter == 4){
+                    console.log(product)
+                    let sump
+                    sump = 0
+    
+                    product.map((gf,i)=>{
+       
+    
+    
+                        var r = product.filter(obj=>obj.status == 404);
+                        if(r.length > 0 && i == 0){
+    
+                            products.push({status:404,array:JSON.stringify(product)})
+                            sump = 0
+                        }else if (r.length == 0){
+                            if(i == product.length - 1){
+                                sump += parseInt(gf.price)
+                                products.push({status:200,price:sump,array:JSON.stringify(product)})
+                                sump = 0
+                            }else{
+                                sump += parseInt(gf.price)
+                            
+                            
+                            }
+                        }
+    
+    
+                   
+                   
+                   
+                   
+                    })
+    
+    
+    
+    
+                    product.splice(0,200)
+                    counter = 0 
+    
+    
+                    if(products.length == gcart.length){
+                        console.log(products)
+                        shipping(products)
+                    }
+                }else{
+                    if(products.length == gcart.length){
+                        console.log(products)
+                        shipping(products)
+                    }
+                }
+            
+            }
+            // console.log('one')
+        db.query('SELECT price,name FROM `STORE_products` WHERE id = ?',[value.prid],(err,result)=>{
+            if(err){
+                console.log(err)
+            }else{
+                if(result.length == 1){
+                    const basicPrice = parseInt(result[0].price)
+                    // console.log(result[0])
+                    product.push({status:200,name:result[0].name,price:basicPrice})
+                    counter ++
+                    send()
+    
+    // size
+                    if(value.size.state == 'null'){
+                         counter ++
+                         send();
+                         // no size
+                    }else{
+                        db.query('SELECT * FROM `STORE_products_options` WHERE Sgroup = 1 AND Sto = ?',[value.prid],(err2,result2)=>{
+                            if(err2){
+                                console.log(err2)
+                            }else{
+                            // console.log(result2)
+                            if(result2.length > 0){
+                                if(JSON.parse(result2[0].array).length >= value.size.arnum){
+                                    const si = JSON.parse(result2[0].array)[value.size.arnum]
+                                    // console.log(si)
+                                    if(si.enable == true && parseInt(si.instock) > 0){
+                                        // console.log('yeaaa')
+                                        product.push({status:200,name:si.name,price:parseInt(si.price)})
+                                        counter ++
+                                        send()
+                                    }else{
+                                        // not availble
+                                        console.log('not availble')
+                                        product.push({status:404,name:si.name,price:parseInt(si.price)})
+                                        counter ++
+                                        send();
+                                    }
+                                }else{
+                                    product.push({status:404,name:'size',price:0})
+                                    counter ++
+                                    send();
+                                }
+      
+    
+                                
+                            }else{
+                                product.push({status:404,name:'size',price:0})
+                                counter ++
+                                send();
+                            }  
+    
+                        }                
+     })}
+    
+    
+    // color
+     if(value.color.state == 'null'){
+         counter ++
+         send();
+         // no color
+    }else{
+        db.query('SELECT * FROM `STORE_products_options` WHERE Sgroup = 2 AND Sto = ?',[value.prid],(err2,result2)=>{
+            if(err2){
+                console.log(err2)
+            }else{
+    
+            // console.log(result2)
+            if(result2.length > 0){
+                if(JSON.parse(result2[0].array).length >= value.color.arnum){
+                    const si = JSON.parse(result2[0].array)[value.color.arnum]
+                    // console.log(si)
+                    if(si.enable == true && parseInt(si.instock) > 0){
+                        // console.log('yeaaa')
+                        product.push({status:200,name:si.color,price:0})
+                        counter ++
+                        send()
+                    }else{
+                        // not availble
+                        product.push({status:404,name:si.color,price:0})
+                        counter ++
+                        send();
+                    }
+                }else{
+                    product.push({status:404,name:'color',price:0})
+                    counter ++
+                    send();
+                }
+    
+    
+                
+            }else{
+                product.push({status:404,name:'color',price:0})
+                counter ++
+                send();
+            }    
+    
+        }                
+    })}
+    
+    
+    
+    if(value.op.state == 'null'){
+        counter ++
+        send();
+        // no custom options
+    }else{
+       db.query('SELECT * FROM `STORE_products_options` WHERE Sgroup = 3 AND Sto = ?',[value.prid],(err2,result2)=>{
+           if(err2){
+               console.log(err2)
+           }else{
+    
+        //    console.log(result2)
+           if(result2.length > 0){
+               const si = JSON.parse(result2[0].array)[value.op.arnum]
+            //    console.log(si)
+               if(si.enable == true && parseInt(si.instock) > 0){
+                //    console.log('yeaaa')
+                   product.push({status:200,name:si.optionName,price:si.price})
+                   counter ++
+                   send()
+               }else{
+                   // not availble
+                   product.push({status:404,name:si.optionName,price:si.price})
+                   counter ++
+                   send();
+               }
+    
+               
+           }else{
+               product.push({status:404,name:'custom options',price:0})
+               counter ++
+               send();
+           }    
+    
+       }                
+    })}
+    
+    // 
+    
+    // op
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+                }else{
+                    // 
+                    product.push({status:405,name:value.name,price:0})
+                    counter = 4
+                    send();
+                }
+            }
+        })
+         // console.log()
+         if(counter == gcart.length ){
+        //    setprice(sum)
+          }
+        });
+    
+    
+    
+    
+    
+        
+    
+       }else{
+        // setproductsnum(0)
+        // setprice(0)
+      }
+    
+     
+    
+      
+      }else{
+        // setproductsnum(0)
+        // setprice(0)
+      }
+    
+
+    })
 app.post('/deleteprofile',(req, res)=>{
         const userToken = req.body.userToken
     const usernamevefy = req.body.username
@@ -2402,62 +2860,7 @@ app.post('/getsubtotal',(req, res)=>{
         // setprice(0)
       }
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    // if(gcart){
-    //     setproductsnum(gcart.length)
-    //     setcart(gcart)
-       // // console.log(gcart)
-    //    if(gcart.length > 0){
-    //     var sum = null;
-    //     let counter = 0
-    //     gcart.forEach(function(value, index, arry){
-    
-    //       // // // console.log(value)
-    //     //   if(value.price){
-    //     //     sum += parseInt(value.price);
-    //     //   }
-    
-    
-    
-    //      counter++
-    //      // console.log()
-    //      if(counter == gcart.length ){
-    //     //    setprice(sum)
-    //       }
-    //     });
-    //    }else{
-    //     // setproductsnum(0)
-    //     // setprice(0)
-    //   }
-    
-     
-    
-      
-    //   }else{
-    //     // setproductsnum(0)
-    //   }
+
     })
 //calculate shipping price
 
@@ -2498,7 +2901,7 @@ app.post('/shippingmethods',(req,res)=>{
 
                                                     // console.log(t)
                                                     const send = ()=>{
-                                                        console.log(e)
+                                                        // console.log(e)
                                                         end.push({id:gf.id,shippingmethods:JSON.stringify(e)})
                                                         if(end.length == result.length){
                                                             console.log(end)
@@ -2506,11 +2909,12 @@ app.post('/shippingmethods',(req,res)=>{
                                                         }
                                                     }
                                                     t.map((gff,ii)=>{
+
                                                             // console.log(ii)
                                                             var element = {}
                                                         if(gff.type == 1 && gff.priceble == 1){
-                                                            db.query('SELECT * FROM STORE_shipping WHERE id = ? AND worldwide = 1 OR ptoc = ? AND name = ? AND ptype = 1 AND type = 1 OR ptoc = ? AND name = ? AND ptype = 1 AND type = 2 AND array = ? ORDER BY `STORE_shipping`.`id` DESC',[gff.to,gff.to,country,gff.to,country,state],(err9,result9)=>{
-
+                                                            db.query('SELECT * FROM STORE_shipping WHERE id = ? AND worldwide = 1 OR ptoc = ? AND name = ? AND ptype = 1 AND type = 1 OR ptoc = ? AND name = ? AND ptype = 1 AND type = 2 AND array LIKE ? ORDER BY `STORE_shipping`.`id` DESC',[gff.to,gff.to,country,gff.to,country,state],(err9,result9)=>{
+                                                                console.log('result9')
                                                                 console.log(result9)
                                                                 if(err9){
                                                                     // console.log(err9)
@@ -2534,7 +2938,7 @@ app.post('/shippingmethods',(req,res)=>{
                                                                     }
                                                                 }
                                                             })
-                                                                                                                    }else{
+                                                                                                                    }else if (gff.type == 1 && gff.priceble == 0){
                                                             // alr
                                                             // console.log('pick up')
                                                             e.push({id:gff.id,name:gff.name,icon:gff.icon,priceble:gff.priceble,type:gff.type,price:gff.price,to:gff.to,en:1})
@@ -2799,5 +3203,44 @@ if(err33){
             }
         })
     })
+    app.post('/editaccount',(req, res)=>{
+        const userToken = req.body.userToken
+    const usernamevefy = req.body.username
+    const name = req.body.name
+    const user = req.body.user
+    const email = req.body.email
+    var ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress 
+    db.query('SELECT STORE_users.user,STORE_users.id, STORE_rank.* FROM STORE_users INNER JOIN STORE_rank ON STORE_users.rank=STORE_rank.name WHERE STORE_users.userToken = ? AND user = ?',[userToken,usernamevefy],(err,result) => {
+        if(err){
+            console.log(err)
+        }else{
+            if(result.length == 0){
+                //kick him 
+                res.send({status:0})
+            }else if(result.length == 1){
+                db.query("UPDATE STORE_users SET name = ?, user = ? , email = ? WHERE id = ?",[name,user,email,result[0].id],(errs,gf)=>{
+                    if(errs){
+                        console.log(errs)
+                        res.send({status:501})
+                    }else{
+                        db.query('INSERT INTO `STORE_logs` (`made_by`, `wchange`, `date`,ip) VALUES (?,"Changed his account information",?,?)',[result[0].user,cur_time,ip],(err96,result96) => {
+                            if(err96){
+                                console.log(err96)
+                                res.send({status:501})
+                            }else{
+                                res.send({status:200})
+                            }
+                        })
+
+                    }
+                })
+
+            }else{
+                res.send({status:2})
+                //send this request to support
+            }
+        }
+    })
+})
 var httpsServer = https.createServer(credentials, app);
 httpsServer.listen(PORT, () => console.log(`Server is running on PORT ${PORT}`));
