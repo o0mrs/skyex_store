@@ -1,0 +1,356 @@
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Outfit&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital@1&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Dongle&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat+Alternates&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital@1&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap');
+@import url(https://fonts.googleapis.com/css?family=Comfortaa:400,700,300);
+.wrapper {
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  
+}
+
+.checkmark__circle {
+  stroke-dasharray: 166;
+  stroke-dashoffset: 166;
+  strokeWidth: 2;
+  stroke-miterlimit: 10;
+  stroke: #7ac142;
+  fill: none;
+  animation: stroke 0.6s cubic-bezier(0.65, 0, 0.45, 1) forwards
+}
+
+.checkmark {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  display: block;
+  strokeWidth: 2;
+  stroke: #fff;
+  stroke-miterlimit: 10;
+  margin: 10% auto;
+  box-shadow: inset 0px 0px 0px #66a237;
+  animation: fill .4s ease-in-out .4s forwards, scale .3s ease-in-out .9s both
+}
+
+.checkmark__check {
+  transform-origin: 50% 50%;
+  stroke-dasharray: 48;
+  stroke-dashoffset: 48;
+  animation: stroke 0.3s cubic-bezier(0.65, 0, 0.45, 1) 0.8s forwards
+}
+
+@keyframes stroke {
+  100% {
+      stroke-dashoffset: 0
+  }
+}
+
+@keyframes scale {
+
+  0%,
+  100% {
+      transform: none
+  }
+
+  50% {
+      transform: scale3d(1.1, 1.1, 1)
+  }
+}
+
+@keyframes fill {
+  100% {
+      box-shadow: inset 0px 0px 0px 30px #66a237
+  }
+}
+#d99c{
+  background-color: #000000;
+  color:white;
+  font-family: 'Outfit', sans-serif;
+  max-width: 100vw;
+}
+#d99{
+    background-color: #000000;
+    color:white;
+    font-family: 'Outfit', sans-serif;
+}
+#d999{
+  background-color: #000000;
+  color:white;
+  font-family: 'Outfit', sans-serif;
+  
+}
+#conc{
+    width:auto;
+    max-width:34rem;
+}
+#alartforminwidthclass{
+    min-width: 20px;
+}
+#c3{
+    font-family: 'Outfit', sans-serif;
+    background-color: #000000;
+}
+#d333{
+margin-top: calc(100vh - 590px);
+}
+#f3{
+    font-family: 'Outfit', sans-serif;
+}
+@media screen and (max-width: 400px) {
+    #paypal-button-container {
+        width: 100%;
+    }
+}
+
+/* Media query for desktop viewport */
+@media screen and (min-width: 400px) {
+    #paypal-button-container {
+        width: 250px;
+    }
+}
+#mme{
+    margin-top: 5px;
+}
+#footerr{
+    margin-top: 100vh;
+}
+#ddd3333{
+    background-image: url('https://images.unsplash.com/photo-1639497786347-23e617e2d464?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1956&q=80');
+    background-color: rgb(0, 0, 0);
+}
+.dot-pulse {
+  position: relative;
+  left: -9999px;
+  width: 10px;
+  height: 10px;
+  border-radius: 5px;
+  background-color: #ffffff;
+  color: #ffffff;
+  box-shadow: 9999px 0 0 -5px #f4efef;
+  animation: dotPulse 1.5s infinite linear;
+  animation-delay: .25s;
+}
+
+.dot-pulse::before, .dot-pulse::after {
+  content: '';
+  display: inline-block;
+  position: absolute;
+  top: 0;
+  width: 10px;
+  height: 10px;
+  border-radius: 5px;
+  background-color: #ffffff;
+  color: #ffffff;
+}
+
+.dot-pulse::before {
+  box-shadow: 9984px 0 0 -5px #ffffff;
+  animation: dotPulseBefore 1.5s infinite linear;
+  animation-delay: 0s;
+}
+
+.dot-pulse::after {
+  box-shadow: 10014px 0 0 -5px #ffffff;
+  animation: dotPulseAfter 1.5s infinite linear;
+  animation-delay: .5s;
+}
+
+@keyframes dotPulseBefore {
+  0% {
+    box-shadow: 9984px 0 0 -5px #ffffff;
+  }
+  30% {
+    box-shadow: 9984px 0 0 2px #f6f6f6;
+  }
+  60%,
+  100% {
+    box-shadow: 9984px 0 0 -5px #f6f4f4;
+  }
+}
+
+@keyframes dotPulse {
+  0% {
+    box-shadow: 9999px 0 0 -5px #fffefe;
+  }
+  30% {
+    box-shadow: 9999px 0 0 2px #eeeaea;
+  }
+  60%,
+  100% {
+    box-shadow: 9999px 0 0 -5px #ffffff;
+  }
+}
+
+@keyframes dotPulseAfter {
+  0% {
+    box-shadow: 10014px 0 0 -5px #ffffff;
+  }
+  30% {
+    box-shadow: 10014px 0 0 2px #fffefe;
+  }
+  60%,
+  100% {
+    box-shadow: 10014px 0 0 -5px #ffffff;
+  }
+}
+#c{
+  width: 100%;
+  height: auto;
+  display: flex;
+  justify-content: center;
+  position: fixed;
+  right: 0;
+}
+#navd{
+  width: 20rem;
+  height: 100vh;
+  position: sticky;
+  left: 0;
+}
+#qa{
+  padding-bottom:3px;
+}
+#font99{
+  font-family: 'Roboto', sans-serif;
+}
+#cardearn{
+
+    /* background:
+        linear-gradient(rgb(35, 35, 39), transparent),
+        linear-gradient(to top left, rgb(12, 2, 36), transparent),
+        linear-gradient(to top right, rgb(0, 0, 0), transparent);
+    background-blend-mode: screen; */
+    background:
+    linear-gradient(rgb(0, 0, 0), transparent),
+    linear-gradient(to top left, rgb(43, 32, 70), transparent),
+    linear-gradient(to top right, rgb(4, 29, 14), transparent),
+    linear-gradient(to bottom left, rgb(12, 39, 35), transparent);
+background-blend-mode: screen;
+}
+#cardorders{
+  background:
+  linear-gradient(rgb(0, 0, 0), transparent),
+  linear-gradient(to top left, rgb(0, 13, 37), transparent),
+  linear-gradient(to top right, rgb(4, 29, 14), transparent),
+  linear-gradient(to bottom left, rgb(21, 1, 44), transparent),
+  linear-gradient(to bottom right, rgb(37, 35, 54), transparent);
+
+background-blend-mode: screen;
+}
+#cardview{
+  background:
+  linear-gradient(rgb(0, 0, 0), transparent),
+  linear-gradient(to top left, rgb(0, 13, 37), transparent),
+  linear-gradient(to top right, rgb(44, 42, 70), transparent),
+  linear-gradient(to bottom left, rgb(31, 13, 53), transparent),
+  linear-gradient(to bottom right, rgb(4, 29, 14), transparent);
+
+background-blend-mode: screen;
+}
+#empliyeecard{
+  background:
+  linear-gradient(rgb(0, 0, 0), transparent),
+  linear-gradient(to top left, rgb(0, 13, 37), transparent),
+  linear-gradient(to top right, rgb(53, 52, 0), transparent),
+  linear-gradient(to bottom left, rgb(1, 65, 56), transparent),
+  linear-gradient(to bottom right, rgb(4, 40, 61), transparent);
+
+background-blend-mode: screen;
+}
+#font30{
+  font-family: 'Dongle', sans-serif;
+}
+#empliyeecard2{
+ margin-top:1.777rem;
+}
+.emo{
+  font-family: 'Montserrat Alternates', sans-serif;
+}
+.dmsans{
+  font-family: 'DM Sans', sans-serif;
+}
+.roboto{
+  font-family: 'Roboto', sans-serif;
+}
+.proalart{
+
+  right: 0;
+  position: fixed;
+}
+*{
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0) !important;
+}
+.tooltip{
+  color: #fff;
+}
+#card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border-radius: var(--rounded-box, 1rem);
+}
+#card:focus {
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+}
+#card figure {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+#card.image-full {
+  display: grid;
+}
+#card.image-full:before {
+  position: relative;
+  content: "";
+  z-index: 10;
+  --tw-bg-opacity: 1;
+  background-color: hsl(var(--n) / var(--tw-bg-opacity));
+  opacity: 0.75;
+  border-radius: var(--rounded-box, 1rem);
+}
+#card.image-full:before, 
+  #card.image-full > * {
+  grid-column-start: 1;
+  grid-row-start: 1;
+}
+#card.image-full:before, 
+  #card.image-full > * {
+  grid-column-start: 1;
+  grid-row-start: 1;
+}
+#card.image-full > figure img {
+  height: 100%;
+  object-fit: cover;
+}
+#card.image-full > #card-body {
+  position: relative;
+  z-index: 20;
+  --tw-text-opacity: 1;
+  color: hsl(var(--nc) / var(--tw-text-opacity));
+}
+#card:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}
+#card.bordered {
+  border-width: 1px;
+  --tw-border-opacity: 1;
+  border-color: hsl(var(--b2, var(--b1)) / var(--tw-border-opacity));
+}
+#card.compact #card-body {
+  padding: 1rem/* 16px */;
+  font-size: 0.875rem/* 14px */;
+  line-height: 1.25rem/* 20px */;
+}
+/* https://images.unsplash.com/photo-1548133650-7e2b96ebe5e6?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxleHBsb3JlLWZlZWR8OXx8fGVufDB8fHx8&auto=format&fit=crop&w=900&q=60 */
+    /* https://picsum.photos/id/1005/1600/1400 */
+/* https://images.unsplash.com/photo-1639497786347-23e617e2d464?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1956&q=80 */
+    /* https://images.unsplash.com/photo-1547994770-e5d8509b114d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2070&q=80 */

@@ -1,0 +1,2 @@
+setnewalart([...newalart,{id:Math.floor(Math.random() * 900) ,name:"An account with this username already exist",type:"error"}])
+setnewalart([...newalart,{id:Math.floor(Math.random() * 900) ,name:"501 Internal server error"type:"error"}])
